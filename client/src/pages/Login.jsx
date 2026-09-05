@@ -11,7 +11,7 @@ const Login = () => {
     event.preventDefault(); setError('')
     if (!form.email || !form.password) return setError('Email and password are required.')
     setLoading(true)
-    try { const { data } = await api.post('/auth/login', form); login(data.user, data.token); navigate('/dashboard', { replace: true }) }
+    try { const { data } = await api.post('/auth/login', form); login(data.user, data.token); navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/dashboard', { replace: true }) }
     catch (requestError) { setError(requestError.response?.data?.message || 'Unable to connect to the server.') }
     finally { setLoading(false) }
   }
