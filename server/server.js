@@ -1,6 +1,7 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import connectDB from './config/db.js'
 
 dotenv.config()
 
@@ -17,6 +18,12 @@ app.get('/api/health', (_request, response) => {
   })
 })
 
-app.listen(port, () => {
-  console.log(`BookEase API listening on port ${port}`)
-})
+const startServer = async () => {
+  await connectDB()
+
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`)
+  })
+}
+
+startServer()
