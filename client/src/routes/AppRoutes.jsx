@@ -21,7 +21,9 @@ const AppRoutes = () => (
     <Route element={<AdminRoute />}>
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Route>
-    <Route path="/users" element={<Users />} />
+    <Route element={<AdminRoute />}>
+      <Route path="/users" element={<Users />} />
+    </Route>
     <Route path="/bookings" element={<Bookings />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
