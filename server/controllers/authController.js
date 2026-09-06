@@ -66,7 +66,7 @@ export const loginUser = async (request, response) => {
     }
 
     if (user.isBlocked) {
-      return response.status(403).json({ success: false, message: 'This account is blocked' })
+      return response.status(403).json({ success: false, message: 'Your account has been blocked. Please contact an administrator.' })
     }
 
     return response.json({ success: true, token: createToken(user), user: safeUser(user) })
