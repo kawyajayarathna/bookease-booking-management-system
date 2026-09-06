@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext'
+import { Link } from 'react-router-dom'
 
 const cards = [
   ['Total Users', '—'],
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
     </div>
     <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{cards.map(([label, value]) => <div key={label} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-3 text-3xl font-bold text-slate-900">{value}</p><p className="mt-2 text-xs text-slate-400">Coming soon</p></div>)}</div>
     <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"><h2 className="text-lg font-semibold text-slate-900">Admin account</h2><div className="mt-4 grid gap-4 sm:grid-cols-3"><div><p className="text-sm text-slate-500">Name</p><p className="font-medium text-slate-800">{user.name}</p></div><div><p className="text-sm text-slate-500">Email</p><p className="font-medium text-slate-800">{user.email}</p></div><div><p className="text-sm text-slate-500">Role</p><p className="font-medium capitalize text-slate-800">{user.role}</p></div></div></div>
+    <div className="mt-8 grid gap-4 sm:grid-cols-2"><Link to="/users" className="rounded-xl border border-slate-200 bg-white p-5 font-semibold text-blue-700 shadow-sm">Manage Users<span className="mt-1 block text-sm font-normal text-slate-500">View and monitor users</span></Link><Link to="/admin/bookings" className="rounded-xl border border-slate-200 bg-white p-5 font-semibold text-blue-700 shadow-sm">Manage Bookings<span className="mt-1 block text-sm font-normal text-slate-500">Review all reservations</span></Link></div>
   </main>
 }
 

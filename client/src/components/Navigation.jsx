@@ -10,7 +10,7 @@ const publicLinks = [
 const Navigation = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const links = user ? [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'Dashboard' }, ...(user.role === 'admin' ? [{ to: '/admin/dashboard', label: 'Admin Dashboard' }, { to: '/users', label: 'User Management' }] : [])] : publicLinks
+  const links = user ? [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'Dashboard' }, ...(user.role === 'admin' ? [{ to: '/admin/dashboard', label: 'Admin Dashboard' }, { to: '/users', label: 'User Management' }, { to: '/admin/bookings', label: 'Booking Management' }] : [{ to: '/bookings', label: 'My Bookings' }, { to: '/bookings/create', label: 'Create Booking' }])] : publicLinks
   const handleLogout = () => { logout(); navigate('/login', { replace: true }) }
 
   return <nav className="border-b border-slate-200 bg-white">

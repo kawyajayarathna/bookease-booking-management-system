@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Bookings from '../pages/Bookings'
+import CreateBooking from '../pages/CreateBooking'
+import AdminBookings from '../pages/AdminBookings'
 import Dashboard from '../pages/Dashboard'
 import AdminDashboard from '../pages/AdminDashboard'
 import Home from '../pages/Home'
@@ -17,14 +19,16 @@ const AppRoutes = () => (
     <Route path="/register" element={<Register />} />
     <Route element={<ProtectedRoute />}>
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/bookings" element={<Bookings />} />
+      <Route path="/bookings/create" element={<CreateBooking />} />
     </Route>
     <Route element={<AdminRoute />}>
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
     </Route>
     <Route element={<AdminRoute />}>
       <Route path="/users" element={<Users />} />
+      <Route path="/admin/bookings" element={<AdminBookings />} />
     </Route>
-    <Route path="/bookings" element={<Bookings />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 )
