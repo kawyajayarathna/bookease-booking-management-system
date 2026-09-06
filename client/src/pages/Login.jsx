@@ -1,27 +1,15 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
 
 const Login = () => {
-  const { login } = useAuth(); const navigate = useNavigate(); const location = useLocation()
-  const [form, setForm] = useState({ email: '', password: '' }); const [error, setError] = useState(''); const [loading, setLoading] = useState(false)
+  const { login } = useAuth(); const navigate = useNavigate(); const { pathname, state } = useLocation(); const registerMode = pathname === '/register'
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' }); const [error, setError] = useState(''); const [loading, setLoading] = useState(false)
   const change = ({ target }) => setForm({ ...form, [target.name]: target.value })
-  const submit = async (event) => {
-    event.preventDefault(); setError('')
-    if (!form.email || !form.password) return setError('Email and password are required.')
-    setLoading(true)
-    try { const { data } = await api.post('/auth/login', form); login(data.user, data.token); navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/dashboard', { replace: true }) }
-    catch (requestError) { setError(requestError.response?.data?.message || 'Unable to connect to the server.') }
-    finally { setLoading(false) }
-  }
-  return <main className="flex flex-1 items-center justify-center px-6 py-12"><form onSubmit={submit} className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-    <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
-    {location.state?.message && <p className="mt-3 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">{location.state.message}</p>}
-    {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-    <div className="mt-6 space-y-4"><label className="block text-sm font-medium text-slate-700">Email<input name="email" type="email" value={form.email} onChange={change} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" /></label><label className="block text-sm font-medium text-slate-700">Password<input name="password" type="password" value={form.password} onChange={change} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" /></label></div>
-    <button disabled={loading} className="mt-6 w-full rounded-lg bg-blue-700 px-4 py-2.5 font-semibold text-white disabled:opacity-60">{loading ? 'Logging in...' : 'Login'}</button>
-    <p className="mt-5 text-center text-sm text-slate-600">Don't have an account? <Link to="/register" className="font-semibold text-blue-700">Register</Link></p>
-  </form></main>
+  const submit = async (event) => { event.preventDefault(); setError(''); if (!form.email || !form.password || (registerMode && (!form.name || !form.confirmPassword))) return setError('Please complete all required fields.'); if (registerMode && form.password !== form.confirmPassword) return setError('Passwords do not match.'); setLoading(true); try { if (registerMode) { await api.post('/auth/register', { name: form.name, email: form.email, password: form.password }); navigate('/login', { replace: true, state: { message: 'Account created. You can now log in.' } }) } else { const { data } = await api.post('/auth/login', { email: form.email, password: form.password }); login(data.user, data.token); navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/', { replace: true }) } } catch (requestError) { setError(requestError.response?.data?.message || 'Unable to connect to the server.') } finally { setLoading(false) } }
+  const switchMode = () => navigate(registerMode ? '/login' : '/register')
+  const handleGoogleLogin = () => { window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google` }
+  return <main className="editorial-auth"><section className="auth-intro"><p className="eyebrow">SOUNDEASE / COLOMBO</p><h1>{registerMode ? <>Join<br /><em>SoundEase.</em></> : <>Welcome<br /><em>back.</em></>}</h1><p>{registerMode ? 'Reserve professional sound and lighting equipment for your next event.' : 'Access your equipment rentals, bookings and event plans.'}</p></section><form onSubmit={submit} className="editorial-auth-form"><span className="auth-mark">S</span><h2>{registerMode ? 'Create account' : 'Login'}</h2>{state?.message && <p className="auth-success">{state.message}</p>}{error && <p className="auth-error">{error}</p>}{registerMode && <label>Name<input name="name" type="text" value={form.name} onChange={change} autoComplete="name" /></label>}<label>Email<input name="email" type="email" placeholder="you@example.com" value={form.email} onChange={change} autoComplete="email" /></label><label>Password<input name="password" type="password" placeholder="Enter your password" value={form.password} onChange={change} autoComplete={registerMode ? 'new-password' : 'current-password'} /></label>{registerMode && <label>Confirm password<input name="confirmPassword" type="password" value={form.confirmPassword} onChange={change} autoComplete="new-password" /></label>}<button className="auth-submit" disabled={loading}>{loading ? 'Please wait...' : registerMode ? 'Create account' : 'Login'}</button><div className="auth-divider"><span>or continue with</span></div><button type="button" className="google-button" onClick={handleGoogleLogin}>G <span>Continue with Google</span></button><p className="auth-switch">{registerMode ? 'Already have an account?' : 'New to SoundEase?'} <button type="button" onClick={switchMode}>{registerMode ? 'Login' : 'Create an account'}</button></p></form></main>
 }
 export default Login

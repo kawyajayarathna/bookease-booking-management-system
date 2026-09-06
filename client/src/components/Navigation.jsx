@@ -1,35 +1,7 @@
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
 
-const publicLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/login', label: 'Login' },
-  { to: '/register', label: 'Register' },
-]
-
-const Navigation = () => {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const links = user ? [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'Dashboard' }, ...(user.role === 'admin' ? [{ to: '/admin/dashboard', label: 'Admin Dashboard' }, { to: '/users', label: 'User Management' }, { to: '/admin/bookings', label: 'Booking Management' }] : [{ to: '/bookings', label: 'My Bookings' }, { to: '/bookings/create', label: 'Create Booking' }])] : publicLinks
-  const handleLogout = () => { logout(); navigate('/login', { replace: true }) }
-
-  return <nav className="border-b border-slate-200 bg-white">
-    <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-      <NavLink to="/" className="text-xl font-bold text-blue-700">BookEase</NavLink>
-      <div className="flex gap-5 text-sm font-medium">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) => isActive ? 'text-blue-700' : 'text-slate-600 hover:text-blue-700'}
-          >
-            {link.label}
-          </NavLink>
-        ))}
-        {user && <button type="button" onClick={handleLogout} className="text-slate-600 hover:text-blue-700">Logout</button>}
-      </div>
-    </div>
-  </nav>
-}
-
+const Navigation = () => { const { user, logout } = useAuth(); const { itemCount } = useCart(); const navigate = useNavigate(); const [open, setOpen] = useState(false); const close = () => setOpen(false); const cart = <span aria-label={`Cart with ${itemCount} items`}>🛒{itemCount ? ` ${itemCount}` : ''}</span>; const commonLinks = [{ to: '/', label: 'Home' }, { to: '/catalogue', label: 'Catalog' }, { to: '/about', label: 'About' }, { to: '/contact', label: 'Contacts' }]; const mainLinks = user ? [...commonLinks, ...(user.role === 'admin' ? [{ to: '/admin/dashboard', label: 'Admin' }, { to: '/users', label: 'Users' }, { to: '/admin/bookings', label: 'Rentals' }] : [{ to: '/bookings', label: 'My Rentals' }])] : commonLinks; const signOut = () => { logout(); close(); navigate('/login', { replace: true }) }; return <nav className="editorial-nav"><div className="editorial-nav-inner"><NavLink to="/" onClick={close} className="brand-lockup"><span className="brand-mark">K</span><span>KVAudio</span></NavLink><div className={`${open ? 'mobile-open' : ''} nav-links`}>{mainLinks.map((link) => <NavLink key={link.to} to={link.to} onClick={close} className={({ isActive }) => isActive ? 'nav-active' : ''}>{link.label}</NavLink>)}</div><div className={`${open ? 'mobile-open' : ''} nav-utilities`}><NavLink to="/cart" onClick={close} className="cart-link">{cart}</NavLink>{user ? <button type="button" onClick={signOut}>Logout</button> : <NavLink to="/login" onClick={close} className="sign-in">Login</NavLink>}</div><button type="button" className="menu-toggle" aria-label="Open menu" onClick={() => setOpen(!open)}>{open ? '×' : '☰'}</button></div></nav> }
 export default Navigation

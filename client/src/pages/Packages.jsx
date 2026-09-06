@@ -1,0 +1,5 @@
+import { Link } from 'react-router-dom'
+import { packages } from '../data/catalogue'
+
+const Packages = () => <main className="mx-auto max-w-6xl px-5 py-12 sm:px-6"><p className="text-sm font-bold uppercase tracking-wider text-amber-600">Ready-made setups</p><h1 className="mt-2 text-4xl font-bold">Rental Packages</h1><p className="mt-3 text-slate-600">Start with a practical equipment combination for your event.</p><div className="mt-8 grid gap-6 md:grid-cols-3">{packages.map((pack) => <article key={pack.id} className="overflow-hidden rounded-2xl bg-white shadow-sm"><img src={pack.image} alt={pack.name} className="h-48 w-full object-cover" /><div className="p-5"><span className="text-sm font-semibold text-blue-700">{pack.events.join(' · ')}</span><h2 className="mt-2 text-xl font-bold">{pack.name}</h2><p className="mt-2 text-sm text-slate-600">{pack.description}</p><p className="mt-4 font-bold">Rs. {pack.packagePricePerDay.toLocaleString()} / day</p><Link to={`/packages/${pack.id}`} className="mt-5 block rounded-lg bg-slate-900 px-4 py-2 text-center font-semibold text-white">View Package</Link></div></article>)}</div></main>
+export default Packages

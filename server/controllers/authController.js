@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
+import crypto from 'node:crypto'
 
 const emailPattern = /^\S+@\S+\.\S+$/
 
@@ -72,5 +73,21 @@ export const loginUser = async (request, response) => {
     return response.json({ success: true, token: createToken(user), user: safeUser(user) })
   } catch (error) {
     return response.status(500).json({ success: false, message: 'Unable to log in' })
+  }
+}
+
+export const googleCallback = async (request, response) => {
+  try {
+    const { emails, displayName } = request.user
+    const email = emails?.[0]?.value?.trim().toLowerCase()
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5176'
+    if (!email) return response.redirect(`${clientUrl}/login?oauthError=missing_email`)
+    let user = await User.findOne({ email })
+    if (user?.isBlocked) return response.redirect(`${clientUrl}/login?oauthError=blocked`)
+    if (!user) user = await User.create({ name: displayName || email.split('@')[0], email, password: crypto.randomBytes(32).toString('hex') })
+    const token = createToken(user)
+    return response.redirect(`${clientUrl}/auth/google/callback?token=${encodeURIComponent(token)}&user=${encodeURIComponent(JSON.stringify(safeUser(user)))}`)
+  } catch {
+    return response.redirect(`${process.env.CLIENT_URL || 'http://localhost:5176'}/login?oauthError=failed`)
   }
 }
