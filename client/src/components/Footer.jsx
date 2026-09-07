@@ -1,0 +1,4 @@
+import { Link } from 'react-router-dom'
+
+const Footer = () => <footer className="mt-auto border-t border-slate-200 bg-slate-950 text-slate-300"><div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 sm:grid-cols-2 md:grid-cols-3"><div><p className="text-xl font-bold text-white">KVAudio</p><p className="mt-3 max-w-xs text-sm">Professional audio, lighting and staging hire.</p></div><div><p className="font-semibold text-white">Explore</p><div className="mt-3 flex flex-col gap-2 text-sm"><Link to="/">Home</Link><Link to="/catalogue">Equipment</Link><Link to="/about">About</Link><Link to="/contact">Contact</Link></div></div><div><p className="font-semibold text-white">Colombo rentals</p><p className="mt-3 text-sm">Reliable event-ready equipment, delivered island-wide.</p></div></div><div className="border-t border-slate-800 py-4 text-center text-xs">© {new Date().getFullYear()} KVAudio. All rights reserved.</div></footer>
+export default Footer
