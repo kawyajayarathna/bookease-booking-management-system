@@ -27,7 +27,7 @@ app.use('/api/contact', contactRoutes)
 app.get('/api/health', (_request, response) => {
   response.json({
     success: true,
-    message: 'BookEase API is running',
+    message: 'KVAudio API is running',
   })
 })
 

@@ -1,6 +1,13 @@
-# BookEase — Booking Management System
+# KVAudio — Audio & Lighting Rental
 
-BookEase is a full-stack booking management system with JWT authentication, user bookings, and an admin workspace for managing users and booking statuses.
+KVAudio is a full-stack booking management system for audio, lighting and staging rentals, with JWT authentication, customer bookings, and an admin workspace.
+
+## Submission Links
+
+- Frontend source: https://github.com/kawyajayarathna/bookease-booking-management-system/tree/main/client
+- Backend source: https://github.com/kawyajayarathna/bookease-booking-management-system/tree/main/server
+- Deployed application: deploy the `client` folder to Vercel or Netlify and submit the generated public URL.
+- Deployed API: deploy the `server` folder to Render or Railway and set `VITE_API_URL` in the frontend to the deployed `/api` URL.
 
 ## Features
 
